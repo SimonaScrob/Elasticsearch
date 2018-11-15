@@ -64,6 +64,7 @@
 #     elif request.method == 'DELETE':
 #         game.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
+
 import django_filters
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions
@@ -96,10 +97,10 @@ class GameCategoryViewSet(generics.ListCreateAPIView):
     serializer_class = GameCategorySerializer
     name = 'gamecategory-list'
     throttle_scope = 'game-categories'
-    throttle_classes = (ScopedRateThrottle,)
-    filter_fields = ('name',)
-    search_fields = ('^name',)
-    ordering_fields = ('name',)
+    throttle_classes = (ScopedRateThrottle, )
+    filter_fields = ('name', )
+    search_fields = ('^name', )
+    ordering_fields = ('name', )
 
 
 class GameCategoryDetailViewSet(generics.RetrieveUpdateDestroyAPIView):

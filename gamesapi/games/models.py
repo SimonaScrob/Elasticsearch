@@ -47,3 +47,18 @@ class PlayerScore(models.Model):
     class Meta:
         ordering = ('-score',)
 
+
+class ArticleType(models.Model):
+    name = models.CharField()
+
+
+class Article(models.Model):
+    title = models.CharField()
+    text = models.TextField()
+    type = models.ForeignKey(ArticleType, related_name='articles',  on_delete=models.CASCADE)
+
+
+
+
+
+
