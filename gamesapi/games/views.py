@@ -72,10 +72,11 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.throttling import ScopedRateThrottle
 
-from games.models import Player, PlayerScore, GameCategory, Game
+from games.models import Player, PlayerScore, GameCategory, Game, Article
 from games.permissions import IsOwnerOrReadOnly
-from games.serializers import PlayerSerializer, PlayerScoreSerializer, GameCategorySerializer, GameSerializer, \
-    UserSerializer
+from games.serializers import PlayerSerializer, PlayerScoreSerializer, \
+    GameCategorySerializer, GameSerializer, \
+    UserSerializer, ArticleSerializer
 from rest_framework import filters
 from django_filters import NumberFilter, DateTimeFilter, AllValuesFilter, FilterSet
 
@@ -175,6 +176,13 @@ class PlayerScoreDetailViewSet(generics.RetrieveUpdateDestroyAPIView):
     name = 'playerscore-detail'
 
 
+class ArticleViewSet(generics.ListCreateAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    name = 'article-list'
+    # filter_class = PlayerScoreFilter
+
+
 class ApiRoot(generics.GenericAPIView):
     name = 'api-root'
 
@@ -184,5 +192,6 @@ class ApiRoot(generics.GenericAPIView):
             'game-categories': reverse(GameCategoryViewSet.name, request=request),
             'games': reverse(GameViewSet.name, request=request),
             'scores': reverse(PlayerScoreViewSet.name, request=request),
-            'users': reverse(UserViewSet.name, request=request)
+            'users': reverse(UserViewSet.name, request=request),
+            'articles': reverse(ArticleViewSet.name, request=request)
         })

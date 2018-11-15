@@ -49,11 +49,11 @@ class PlayerScore(models.Model):
 
 
 class ArticleType(models.Model):
-    name = models.CharField()
+    name = models.TextField(max_length=30)
 
 
 class Article(models.Model):
-    title = models.CharField()
+    title = models.TextField(max_length=100)
     text = models.TextField()
     type = models.ForeignKey(ArticleType, related_name='articles',  on_delete=models.CASCADE)
 

@@ -14,5 +14,7 @@ urlpatterns = [
     url(r'^player-score/(?P<pk>[0-9]+)/$', views.PlayerScoreDetailViewSet.as_view(), name=views.PlayerScoreDetailViewSet.name),
     url(r'^users/$', views.UserViewSet.as_view(), name=views.UserViewSet.name),
     url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetailViewSet.as_view(), name=views.UserDetailViewSet.name),
+    url(r'^articles/$', views.ArticleViewSet.as_view(), name=views.ArticleViewSet.name),
+    # url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetailViewSet.as_view(), name=views.UserDetailViewSet.name),
     url(r'^$', views.ApiRoot.as_view(), name=views.ApiRoot.name)
 ]
