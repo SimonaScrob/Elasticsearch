@@ -72,11 +72,11 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.throttling import ScopedRateThrottle
 
-from games.models import Player, PlayerScore, GameCategory, Game, Article
+from games.models import Player, PlayerScore, GameCategory, Game, Article, ArticleType
 from games.permissions import IsOwnerOrReadOnly
 from games.serializers import PlayerSerializer, PlayerScoreSerializer, \
     GameCategorySerializer, GameSerializer, \
-    UserSerializer, ArticleSerializer
+    UserSerializer, ArticleSerializer, ArticleTypeSerializer
 from rest_framework import filters
 from django_filters import NumberFilter, DateTimeFilter, AllValuesFilter, FilterSet
 
@@ -159,7 +159,10 @@ class PlayerScoreFilter(django_filters.FilterSet):
 
     class Meta:
         model = PlayerScore
-        fields = ['score', 'min_score', 'max_score', 'from_score_date', 'to_score_date', 'player_name', 'game_name']
+        fields = [
+            'score', 'min_score', 'max_score', 'from_score_date',
+            'to_score_date', 'player_name', 'game_name'
+        ]
 
 
 class PlayerScoreViewSet(generics.ListCreateAPIView):
@@ -183,6 +186,13 @@ class ArticleViewSet(generics.ListCreateAPIView):
     # filter_class = PlayerScoreFilter
 
 
+class ArticleTypeViewSet(generics.ListCreateAPIView):
+    queryset = ArticleType.objects.all()
+    serializer_class = ArticleTypeSerializer
+    name = 'article-types'
+    # filter_class = PlayerScoreFilter
+
+
 class ApiRoot(generics.GenericAPIView):
     name = 'api-root'
 
@@ -193,5 +203,6 @@ class ApiRoot(generics.GenericAPIView):
             'games': reverse(GameViewSet.name, request=request),
             'scores': reverse(PlayerScoreViewSet.name, request=request),
             'users': reverse(UserViewSet.name, request=request),
+            'article-types': reverse(ArticleTypeViewSet.name, request=request),
             'articles': reverse(ArticleViewSet.name, request=request)
         })
