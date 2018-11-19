@@ -1,0 +1,42 @@
+<form method="get" action=".">
+    <table>
+        <tbody>
+            {{ form.as_table }}
+            <tr>
+                <td>&nbsp;</td>
+                <td><input type="submit" value="Search"></td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+{% if query %}
+    <!-- Begin faceting. -->
+    <h2>By game_category</h2>
+
+    <div>
+        <dl>
+            {% if facets.fields.game_category %}
+                <dt>Categories: </dt>
+                {# Provide only the top 2 game_category #}
+                {% for game_category in facets.fields.game_category|slice:":2" %}
+                    <dd><a href="{{ request.get_full_path }}&amp;selected_facets=game_category_exact:{{ game_category.0|urlencode }}">{{ game_category.0 }}</a> ({{ game_category.1 }})</dd>
+                {% endfor %}
+            {% else %}
+                <p>No game_category facets.</p>
+            {% endif %}
+        </dl>
+    </div>
+    <!-- End faceting -->
+
+    <!-- Display results... -->
+    {% for result in page.object_list %}
+        <div class="search_result">
+            <h3><a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a></h3>
+
+            <p>{{ result.object.body|truncatewords:80 }}</p>
+        </div>
+    {% empty %}
+        <p>Sorry, no results found.</p>
+    {% endfor %}
+{% endif %}

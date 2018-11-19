@@ -21,8 +21,14 @@ Including another URLconf
 # ]
 
 from django.conf.urls import url, include
+from haystack.forms import FacetedSearchForm
+from haystack.query import SearchQuerySet
+from haystack.views import FacetedSearchView
 
 urlpatterns = [
     url(r'^', include('games.urls')),
     url(r'^api-auth/', include('rest_framework.urls')),
+    # url(r'^search/', include('haystack.urls')),
+    url(r'^search/', FacetedSearchView(form_class=FacetedSearchForm, searchqueryset=SearchQuerySet().facet('game_category')), name='haystack_search'),
+
 ]

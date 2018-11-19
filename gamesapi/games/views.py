@@ -64,6 +64,7 @@
 #     elif request.method == 'DELETE':
 #         game.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
+
 import django_filters
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions
@@ -71,12 +72,18 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.throttling import ScopedRateThrottle
 
-from games.models import Player, PlayerScore, GameCategory, Game
+from games.models import Player, PlayerScore, GameCategory, Game, Article, ArticleType
 from games.permissions import IsOwnerOrReadOnly
-from games.serializers import PlayerSerializer, PlayerScoreSerializer, GameCategorySerializer, GameSerializer, \
-    UserSerializer
+from games.serializers import PlayerSerializer, PlayerScoreSerializer, \
+    GameCategorySerializer, GameSerializer, \
+    UserSerializer, ArticleSerializer, ArticleTypeSerializer
 from rest_framework import filters
 from django_filters import NumberFilter, DateTimeFilter, AllValuesFilter, FilterSet
+
+
+from haystack.forms import FacetedSearchForm as BaseFacetedSearchForm
+from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
+
 
 
 class UserViewSet(generics.ListAPIView):
@@ -96,10 +103,10 @@ class GameCategoryViewSet(generics.ListCreateAPIView):
     serializer_class = GameCategorySerializer
     name = 'gamecategory-list'
     throttle_scope = 'game-categories'
-    throttle_classes = (ScopedRateThrottle,)
-    filter_fields = ('name',)
-    search_fields = ('^name',)
-    ordering_fields = ('name',)
+    throttle_classes = (ScopedRateThrottle, )
+    filter_fields = ('name', )
+    search_fields = ('^name', )
+    ordering_fields = ('name', )
 
 
 class GameCategoryDetailViewSet(generics.RetrieveUpdateDestroyAPIView):
@@ -157,7 +164,10 @@ class PlayerScoreFilter(django_filters.FilterSet):
 
     class Meta:
         model = PlayerScore
-        fields = ['score', 'min_score', 'max_score', 'from_score_date', 'to_score_date', 'player_name', 'game_name']
+        fields = [
+            'score', 'min_score', 'max_score', 'from_score_date',
+            'to_score_date', 'player_name', 'game_name'
+        ]
 
 
 class PlayerScoreViewSet(generics.ListCreateAPIView):
@@ -174,6 +184,20 @@ class PlayerScoreDetailViewSet(generics.RetrieveUpdateDestroyAPIView):
     name = 'playerscore-detail'
 
 
+class ArticleViewSet(generics.ListCreateAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    name = 'article-list'
+    # filter_class = PlayerScoreFilter
+
+
+class ArticleTypeViewSet(generics.ListCreateAPIView):
+    queryset = ArticleType.objects.all()
+    serializer_class = ArticleTypeSerializer
+    name = 'article-types'
+    # filter_class = PlayerScoreFilter
+
+
 class ApiRoot(generics.GenericAPIView):
     name = 'api-root'
 
@@ -183,5 +207,40 @@ class ApiRoot(generics.GenericAPIView):
             'game-categories': reverse(GameCategoryViewSet.name, request=request),
             'games': reverse(GameViewSet.name, request=request),
             'scores': reverse(PlayerScoreViewSet.name, request=request),
-            'users': reverse(UserViewSet.name, request=request)
+            'users': reverse(UserViewSet.name, request=request),
+            'article-types': reverse(ArticleTypeViewSet.name, request=request),
+            'articles': reverse(ArticleViewSet.name, request=request)
         })
+
+
+
+class FacetedSearchForm(BaseFacetedSearchForm):
+    def __init__(self, *args, **kwargs):
+        self.selected_facets = kwargs.pop("selected_facets", [])
+        super(FacetedSearchForm, self).__init__(*args, **kwargs)
+
+    def search(self):
+        if not self.is_valid():
+            return self.no_query_found()
+
+        sqs = self.searchqueryset
+        # We need to process each facet to ensure that the field name and the
+        # value are quoted correctly and separately:
+        for facet in self.selected_facets:
+            if ":" not in facet:
+                continue
+            field, value = facet.split(":", 1)
+
+            if value:
+                sqs = sqs.narrow(u'%s:"%s"' % (field, sqs.query.clean(value)))
+
+        if self.load_all:
+            sqs = sqs.load_all()
+
+        return sqs
+
+
+class FacetedSearchView(BaseFacetedSearchView):
+    template_name = 'search/search.html'
+    facet_fields = []
+    form_class = FacetedSearchForm

@@ -1,0 +1,5 @@
+{{object.created}}
+{{object.name }}
+{{object.release_date}}
+{{object.game_category }}
+{{object.played}}
