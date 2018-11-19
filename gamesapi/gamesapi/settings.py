@@ -60,7 +60,10 @@ ROOT_URLCONF = 'gamesapi.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["games/templates"],
+        'DIRS': [
+            os.path.join(os.path.normpath(os.path.dirname(__file__)), 'templates'),
+            # os.path.join(os.path.normpath(os.path.dirname(__file__)), 'search')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,6 +76,7 @@ TEMPLATES = [
 
     },
 ]
+
 
 WSGI_APPLICATION = 'gamesapi.wsgi.application'
 

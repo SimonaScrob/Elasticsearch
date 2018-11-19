@@ -5,7 +5,6 @@ from games.models import Game
 
 class GameIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    owner = indexes.CharField(model_attr='owner')
     created = indexes.DateTimeField(model_attr='created')
     name = indexes.CharField(model_attr='name')
     release_date = indexes.DateTimeField(model_attr='release_date')

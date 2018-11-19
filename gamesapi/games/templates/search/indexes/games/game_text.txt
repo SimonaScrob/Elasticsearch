@@ -1,4 +1,3 @@
-{{object.owner}}
 {{object.created}}
 {{object.name }}
 {{object.release_date}}
