@@ -8,7 +8,7 @@ class GameIndex(indexes.SearchIndex, indexes.Indexable):
     created = indexes.DateTimeField(model_attr='created')
     name = indexes.CharField(model_attr='name')
     release_date = indexes.DateTimeField(model_attr='release_date')
-    game_category = indexes.CharField(model_attr='game_category')
+    game_category = indexes.CharField(model_attr='game_category', faceted=True)
     played = indexes.BooleanField(model_attr='played')
 
     def get_model(self):
