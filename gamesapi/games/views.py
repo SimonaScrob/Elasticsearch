@@ -213,7 +213,6 @@ class ApiRoot(generics.GenericAPIView):
         })
 
 
-
 class FacetedSearchForm(BaseFacetedSearchForm):
     def __init__(self, *args, **kwargs):
         self.selected_facets = kwargs.pop("selected_facets", [])

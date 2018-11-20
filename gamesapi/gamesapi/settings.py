@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_filters',
     'django_nose',
-    'haystack'
+    'haystack',
+    'elasticsearch2'
 ]
 
 MIDDLEWARE = [
@@ -171,7 +172,7 @@ NOSE_ARGS = [
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'ENGINE': 'haystack.backends.elasticsearch2_backend.Elasticsearch2SearchEngine',
         'URL': 'http://127.0.0.1:9200/',
         'INDEX_NAME': 'games',
     },
