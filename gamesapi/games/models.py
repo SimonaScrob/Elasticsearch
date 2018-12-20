@@ -1,5 +1,5 @@
 from django.db import models
-from gamesapi.search import GameIndex
+# from gamesapi.search import GameIndex
 
 
 class GameCategory(models.Model):
@@ -20,16 +20,16 @@ class Game(models.Model):
     def __str__(self):
         return self.name
 
-    def indexing(self):
-        obj = GameIndex(
-            meta={'id': self.id},
-            owner=self.owner,
-            creatade=self.created,
-            name=self.name,
-            release_date=self.release_date
-        )
-        obj.save()
-        return obj.to_dict(include_meta=True)
+    # def indexing(self):
+    #     obj = GameIndex(
+    #         meta={'id': self.id},
+    #         owner=self.owner,
+    #         created=self.created,
+    #         name=self.name,
+    #         release_date=self.release_date
+    #     )
+    #     obj.save()
+    #     return obj.to_dict(include_meta=True)
 
 
 class Player(models.Model):

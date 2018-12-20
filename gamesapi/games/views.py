@@ -77,12 +77,12 @@ from games.permissions import IsOwnerOrReadOnly
 from games.serializers import PlayerSerializer, PlayerScoreSerializer, \
     GameCategorySerializer, GameSerializer, \
     UserSerializer, ArticleSerializer, ArticleTypeSerializer
-from rest_framework import filters
-from django_filters import NumberFilter, DateTimeFilter, AllValuesFilter, FilterSet
+# from rest_framework import filters
+# from django_filters import NumberFilter, DateTimeFilter, AllValuesFilter, FilterSet
 
 
-from haystack.forms import FacetedSearchForm as BaseFacetedSearchForm
-from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
+# from haystack.forms import FacetedSearchForm as BaseFacetedSearchForm
+# from haystack.generic_views import FacetedSearchView as BaseFacetedSearchView
 
 
 
@@ -213,33 +213,33 @@ class ApiRoot(generics.GenericAPIView):
         })
 
 
-class FacetedSearchForm(BaseFacetedSearchForm):
-    def __init__(self, *args, **kwargs):
-        self.selected_facets = kwargs.pop("selected_facets", [])
-        super(FacetedSearchForm, self).__init__(*args, **kwargs)
+# class FacetedSearchForm(BaseFacetedSearchForm):
+#     def __init__(self, *args, **kwargs):
+#         self.selected_facets = kwargs.pop("selected_facets", [])
+#         super(FacetedSearchForm, self).__init__(*args, **kwargs)
+#
+#     def search(self):
+#         if not self.is_valid():
+#             return self.no_query_found()
+#
+#         sqs = self.searchqueryset
+#         # We need to process each facet to ensure that the field name and the
+#         # value are quoted correctly and separately:
+#         for facet in self.selected_facets:
+#             if ":" not in facet:
+#                 continue
+#             field, value = facet.split(":", 1)
+#
+#             if value:
+#                 sqs = sqs.narrow(u'%s:"%s"' % (field, sqs.query.clean(value)))
+#
+#         if self.load_all:
+#             sqs = sqs.load_all()
+#
+#         return sqs
 
-    def search(self):
-        if not self.is_valid():
-            return self.no_query_found()
 
-        sqs = self.searchqueryset
-        # We need to process each facet to ensure that the field name and the
-        # value are quoted correctly and separately:
-        for facet in self.selected_facets:
-            if ":" not in facet:
-                continue
-            field, value = facet.split(":", 1)
-
-            if value:
-                sqs = sqs.narrow(u'%s:"%s"' % (field, sqs.query.clean(value)))
-
-        if self.load_all:
-            sqs = sqs.load_all()
-
-        return sqs
-
-
-class FacetedSearchView(BaseFacetedSearchView):
-    template_name = 'search/search.html'
-    facet_fields = []
-    form_class = FacetedSearchForm
+# class FacetedSearchView(BaseFacetedSearchView):
+#     template_name = 'search/search.html'
+#     facet_fields = []
+#     form_class = FacetedSearchForm
